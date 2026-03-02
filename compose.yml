@@ -1,0 +1,30 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: digital_store
+      POSTGRES_USER: digital_user
+      POSTGRES_PASSWORD: digital_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DJANGO_SECRET_KEY: "dev-secret-key"
+      DB_NAME: digital_store
+      DB_USER: digital_user
+      DB_PASSWORD: digital_pass
+      DB_HOST: db
+      DB_PORT: "5432"
+    depends_on:
+      - db
+    volumes:
+      - .:/code
+
+volumes:
+  pgdata:
